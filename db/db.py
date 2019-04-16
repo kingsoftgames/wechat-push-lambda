@@ -5,15 +5,16 @@ import json
 from botocore.exceptions import ClientError
 from enum import Enum, unique
 from helper.singleton import Singleton
+from helper import rendersetting
 
 
 class DbAccessToken(metaclass=Singleton):
 
-    __TABLE_NAME = "${db_table_name}"
-    __HASH_KEY = "${db_hash_key}"
+    __TABLE_NAME = rendersetting.TABLE_NAME
+    __HASH_KEY = rendersetting.HASH_KEY
+    __REGION = rendersetting.REGION
     __ATTRIBUTE_ACCESS_TOKEN = "access_token"
     __ATTRIBUTE_TTL = "ttl"
-    __REGION = "${db_region}"
     __LOCAL_ENDPOINT_URL = "http://localhost:8000"
     __dynamodb = None
     __table = None

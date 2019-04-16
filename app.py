@@ -2,9 +2,9 @@ import json
 import boto3
 from im import enterprisewechat as ewechat
 from helper.returncode import ReturnCode
+from helper import rendersetting
 
-
-__SECRET_KEY = "${push_secretkey}"
+__SECRET_KEY = rendersetting.SECRET_KEY
 __SECRET_KEY_NAME = "X-SecretKey"
 
 __ENTERPRISE_WECHAT = "enterprise-wechat"

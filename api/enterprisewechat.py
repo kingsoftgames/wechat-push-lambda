@@ -3,9 +3,10 @@ import logging
 from botocore.vendored import requests
 from helper.apireturndode import APIReturnCode
 from helper.singleton import Singleton
+from helper import rendersetting
 
-__WECHAT_CORPID = "${im_ewc_corpid}"
-__WECHAT_SECRET = "${im_ewc_corpsecret}"
+__WECHAT_CORPID = rendersetting.WECHAT_CORPID
+__WECHAT_SECRET = rendersetting.WECHAT_SECRET
 __WECHAT_ACCESS_TOKEN_URL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken"\
     "?corpid={}&corpsecret={}".format(__WECHAT_CORPID, __WECHAT_SECRET)
 __WECHAT_SEND_URL = "https://qyapi.weixin.qq.com/cgi-bin/appchat/send"\
