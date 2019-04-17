@@ -69,28 +69,6 @@ class DbAccessToken(metaclass=Singleton):
         else:
             return DbReturnCode.ACCESS_TOKEN_NOT_EXIST, ""
 
-    def create_table(self):
-        """ for test"""
-        if not self.__exist_table:
-            self.__dynamodb.create_table(
-                TableName=self.__TABLE_NAME,
-                KeySchema=[
-                    {
-                        'AttributeName': self.__HASH_KEY,
-                        'KeyType': 'HASH'
-                    }
-                ],
-                AttributeDefinitions=[
-                    {
-                        'AttributeName': self.__HASH_KEY,
-                        'AttributeType': 'S'
-                    }
-                ],
-                ProvisionedThroughput={
-                    'ReadCapacityUnits': 5,
-                    'WriteCapacityUnits': 5
-                })
-
     def att_ttl(self):
         return self.__ATTRIBUTE_TTL
 

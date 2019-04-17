@@ -10,10 +10,9 @@ def apigw_event():
     """ Generates API GW Event"""
 
     return {
-        "body": '{ "message": "mock from api gateway", \
-            "message_type": "markdown",\
-            "color": "gray",\
-            "details": "details"}',
+        "body": '{ "chatid": "11251680719936804965", \
+            "msgtype": "markdown",\
+            "markdown": {"content": "test"}}',
         "resource": "/{proxy+}",
         "requestContext": {
             "resourceId": "123456",
@@ -62,10 +61,10 @@ def apigw_event():
             "CloudFront-Forwarded-Proto": "https",
             "Accept-Encoding": "gzip, deflate, sdch",
         },
-        "pathParameters": {"im": "examplepath", "chatId": "aaa"},
+        "pathParams": {"im": "enterprise-wechat"},
         "httpMethod": "POST",
         "stageVariables": {"baz": "qux"},
-        "path": "/push/enterprise-wechat/aaa",
+        "path": "/push/enterprise-wechat",
     }
 
 

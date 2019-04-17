@@ -13,32 +13,22 @@ __OK_MESSAGE = "ok"
 __retry = get_retry_policy()
 
 
-def push(chat_id, data, force_from_api=False):
+def push(data, force_from_api=False):
     if __retry.exceeded_max_retry():
         return ReturnCode.RETRY_MAX, ''
     else:
         __retry.increment_retry_count()
 
-    message = data.get('message', '')
-    details = data.get('details', '')
-    message_type = data.get('message_type', '')
-    color = data.get('color', '')
-
-    check = api.check_params(chat_id, message, details, message_type, color)
-
-    if not check:
-        return ReturnCode.PARAMS_ERROR, json.dumps(data)
     code, ret = __get_access_token(force_from_api)
     if code == ReturnCode.OK:
-        api_code, ret = api.send(
-            message, details, chat_id, message_type, color, ret)
+        api_code, ret = api.send(data, ret)
         if api_code == APIReturnCode.OK:
-            return ReturnCode.OK, __OK_MESSAGE
+            return ReturnCode.OK, ret
         else:
             if (api_code == APIReturnCode.AIP_CODE_ERROR and
                     (ret == EWeChatReturnCode.ACCESS_TOKEN_EXPIRED or
                         ret == EWeChatReturnCode.ACCESS_TOKEN_INVALID)):
-                return push(chat_id, data, True)
+                return push(data, True)
             else:
                 return ReturnCode.IM_API_ERROR, ret
     else:
@@ -52,10 +42,10 @@ def __get_access_token(force_from_api=False):
     db_code, ret = db_access_token().get(__IM)
 
     if db_code == DbReturnCode.TABLE_NOT_EXIST:
-        return ReturnCode.DB_ERROR, ret
+        return ReturnCode.DB_ERROR, str(db_code)
 
     if db_code == DbReturnCode.DB_ERROR:
-        return ReturnCode.DB_ERROR, ret
+        return ReturnCode.DB_ERROR, str(db_code)
 
     now = int(time.time())
     if (db_code == DbReturnCode.OK and now < ret[db_access_token().att_ttl()]):
@@ -71,8 +61,9 @@ def __get_access_token(force_from_api=False):
 def __get_access_token_by_api():
     api_code, ret = api.get_access_token()
     if api_code == APIReturnCode.OK:
-        token = ret['access_token']
-        db_code = db_access_token().add(__IM, token, ret['expires_in'])
+        body = ret.json()
+        token = body['access_token']
+        db_code = db_access_token().add(__IM, token, body['expires_in'])
         if db_code == DbReturnCode.OK:
             return ReturnCode.OK, token
         else:

@@ -20,26 +20,28 @@ def lambda_handler(event, context):
     path = event['path']
     urls = path.split('/')
     size = len(urls)
-    if size != 4 and size != 2:
+    if size != 3:
         return result(ReturnCode.URL_ERRROR, '')
-
-    if size == 2:
-        return result(ReturnCode.OK, json.dumps(__SUPPORT_IMS))
 
     path_params = event['pathParams']
     im = path_params['im']
     if im not in __SUPPORT_IMS:
         return result(ReturnCode.IM_ERRROR, '')
 
-    chat_id = path_params['chatId']
     if im == __ENTERPRISE_WECHAT:
         data = event['body']
-        code, message = ewechat.push(chat_id, data)
-        return result(code, message)
+        code, ret = ewechat.push(data)
+        return result(code, ret)
 
 
-def result(code, message):
-    return {
-        "code": code,
-        "message": message
-    }
+def result(code, ret):
+    if (code == ReturnCode.OK):
+        return {
+            "httpstatus": code,
+            "header": ret.headers,
+            "body": ret.json()
+        }
+    else:
+        return {
+            "httpstatus": code
+        }

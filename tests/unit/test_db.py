@@ -5,10 +5,6 @@ from db import db_access_token
 from db import DbReturnCode
 
 
-def test_ceate_table():
-    db_access_token().create_table()
-
-
 def test_add_access_token():
     db_access_token().add("qq", "xcccccccccc", 1)
 
