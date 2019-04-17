@@ -1,14 +1,14 @@
 import json
 import pytest
 import time
-from db import db_access_token
-from db import DbReturnCode
+from push import DbAccessToken
+from push import DbReturnCode
 
 
 def test_add_access_token():
-    db_access_token().add("qq", "xcccccccccc", 1)
+    DbAccessToken.add("qq", "dd", 1)
 
 
 def test_get_access_token():
-    code, _ = db_access_token().get("qq")
+    code, _ = DbAccessToken.get("qq")
     assert code == DbReturnCode.OK

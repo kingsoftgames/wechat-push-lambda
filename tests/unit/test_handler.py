@@ -1,8 +1,7 @@
 import json
 import pytest
 
-import app
-from helper.returncode import ReturnCode
+from push import lambda_handler
 
 
 @pytest.fixture()
@@ -15,7 +14,7 @@ def apigw_event():
         'httpMethod': 'POST',
         'headers':
         {
-            'X-SecretKey': 'a'
+            'X-SecretKey': 'aa'
         },
         'multiValueHeaders': None,
         'queryStringParameters': None,
@@ -57,12 +56,18 @@ def apigw_event():
             'extendedRequestId': 'YRkMjGft5PgFY9g=',
             'apiId': '9tnh3yp2b6'
         },
-        'body': None,
+        'body': {
+            'chatid': 'aa',
+            'msgtype': 'markdown',
+            'markdown': {
+                'content': 'test'
+            }
+        },
         'isBase64Encoded': False
         }
 
 
 def test_lambda_handler(apigw_event):
 
-    ret = app.lambda_handler(apigw_event, "")
+    ret = lambda_handler(apigw_event, "")
     assert ret["statusCode"] >= ReturnCode.OK
