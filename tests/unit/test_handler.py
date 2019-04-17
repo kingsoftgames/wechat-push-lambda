@@ -10,65 +10,59 @@ def apigw_event():
     """ Generates API GW Event"""
 
     return {
-        "body": '{ "chatid": "11251680719936804965", \
-            "msgtype": "markdown",\
-            "markdown": {"content": "test"}}',
-        "resource": "/{proxy+}",
-        "requestContext": {
-            "resourceId": "123456",
-            "apiId": "1234567890",
-            "resourcePath": "/{proxy+}",
-            "httpMethod": "POST",
-            "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
-            "accountId": "123456789012",
-            "identity": {
-                "apiKey": "",
-                "userArn": "",
-                "cognitoAuthenticationType": "",
-                "caller": "",
-                "userAgent": "Custom User Agent String",
-                "user": "",
-                "cognitoIdentityPoolId": "",
-                "cognitoIdentityId": "",
-                "cognitoAuthenticationProvider": "",
-                "sourceIp": "127.0.0.1",
-                "accountId": "",
+        'resource': '/push/{im}',
+        'path': '/push/',
+        'httpMethod': 'POST',
+        'headers':
+        {
+            'X-SecretKey': 'a'
+        },
+        'multiValueHeaders': None,
+        'queryStringParameters': None,
+        'multiValueQueryStringParameters': None,
+        'pathParameters':
+        {
+            'im': "enterprise-wechat"
+        },
+        'stageVariables': None,
+        'requestContext':
+        {
+            'path': '/push/{im}',
+            'accountId': '216927468640',
+            'resourceId': 'dwiqen',
+            'stage': 'test-invoke-stage',
+            'domainPrefix': 'testPrefix',
+            'requestId': 'd3a9322c-60ec-11e9-9fb9-435fa8ab9898',
+            'identity':
+            {
+                'cognitoIdentityPoolId': None,
+                'cognitoIdentityId': None,
+                'apiKey': 'test-invoke-api-key',
+                'cognitoAuthenticationType': None,
+                'userArn': 'arn:aws-cn:iam::216927468640:user/jianghaitao',
+                'apiKeyId': 'test-invoke-api-key-id',
+                'userAgent': 'aws-internal/3 aws-sdk-java/1.11.498 Linux/4.9.\
+                    137-0.1.ac.218.74.329.metal1.x86_64 OpenJDK_64-\
+                        Bit_Server_VM/25.202-b08 java/1.8.0_202',
+                'accountId': '216927468640',
+                'caller': 'AIDAO4OTWWCBQFG63TKEO',
+                'sourceIp': 'test-invoke-source-ip',
+                'accessKey': 'ASIATFAPCPRQJEPFIH22',
+                'cognitoAuthenticationProvider': None,
+                'user': 'AIDAO4OTWWCBQFG63TKEO'
             },
-            "stage": "prod",
+            'domainName': 'testPrefix.testDomainName',
+            'resourcePath': '/push/{im}',
+            'httpMethod': 'POST',
+            'extendedRequestId': 'YRkMjGft5PgFY9g=',
+            'apiId': '9tnh3yp2b6'
         },
-        "queryStringParameters": {"foo": "bar"},
-        "headers": {
-            "X-SecretKey": "a",
-            "Via": "1.1 08f323deadbeefa7af34d5feb414ce27.cloudfront.net \
-                (CloudFront)",
-            "Accept-Language": "en-US,en;q=0.8",
-            "CloudFront-Is-Desktop-Viewer": "true",
-            "CloudFront-Is-SmartTV-Viewer": "false",
-            "CloudFront-Is-Mobile-Viewer": "false",
-            "X-Forwarded-For": "127.0.0.1, 127.0.0.2",
-            "CloudFront-Viewer-Country": "US",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,\
-                image/webp,*/*;q=0.8",
-            "Upgrade-Insecure-Requests": "1",
-            "X-Forwarded-Port": "443",
-            "Host": "1234567890.execute-api.us-east-1.amazonaws.com",
-            "X-Forwarded-Proto": "https",
-            "X-Amz-Cf-Id": "aaaaaaaaaae3VYQb9jd-nvCd-\
-                de396Uhbp027Y2JvkCPNLmGJHqlaA==",
-            "CloudFront-Is-Tablet-Viewer": "false",
-            "Cache-Control": "max-age=0",
-            "User-Agent": "Custom User Agent String",
-            "CloudFront-Forwarded-Proto": "https",
-            "Accept-Encoding": "gzip, deflate, sdch",
-        },
-        "pathParams": {"im": "enterprise-wechat"},
-        "httpMethod": "POST",
-        "stageVariables": {"baz": "qux"},
-        "path": "/push/enterprise-wechat",
-    }
+        'body': None,
+        'isBase64Encoded': False
+        }
 
 
 def test_lambda_handler(apigw_event):
 
     ret = app.lambda_handler(apigw_event, "")
-    assert ret["code"] == ReturnCode.OK
+    assert ret["statusCode"] >= ReturnCode.OK

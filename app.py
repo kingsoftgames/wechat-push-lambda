@@ -13,18 +13,15 @@ __SUPPORT_IMS = [__ENTERPRISE_WECHAT]
 
 def lambda_handler(event, context):
     header = event['headers']
-    if (__SECRET_KEY_NAME not in header or
+    if (not header or __SECRET_KEY_NAME not in header or
             header[__SECRET_KEY_NAME] != __SECRET_KEY):
         return result(ReturnCode.SECRETKEY_EREEOR, '')
 
-    path = event['path']
-    urls = path.split('/')
-    size = len(urls)
-    if size != 3:
+    path_params = event['pathParameters']
+    if not path_params:
         return result(ReturnCode.URL_ERRROR, '')
 
-    path_params = event['pathParams']
-    im = path_params['im']
+    im = path_params.get('im', '')
     if im not in __SUPPORT_IMS:
         return result(ReturnCode.IM_ERRROR, '')
 
@@ -37,11 +34,15 @@ def lambda_handler(event, context):
 def result(code, ret):
     if (code == ReturnCode.OK):
         return {
-            "httpstatus": code,
-            "header": ret.headers,
-            "body": ret.json()
+            "statusCode": code,
+            "headers": dict(ret.headers),
+            "body": json.dumps(ret.json())
         }
     else:
         return {
-            "httpstatus": code
+            "statusCode": code,
+            "headers": {
+                "content-type": "application/json; charset=UTF-8"
+            },
+            "body": ""
         }

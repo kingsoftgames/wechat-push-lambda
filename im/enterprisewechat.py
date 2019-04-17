@@ -22,15 +22,12 @@ def push(data, force_from_api=False):
     code, ret = __get_access_token(force_from_api)
     if code == ReturnCode.OK:
         api_code, ret = api.send(data, ret)
-        if api_code == APIReturnCode.OK:
-            return ReturnCode.OK, ret
+        if (api_code == APIReturnCode.AIP_CODE_ERROR and
+            (ret == EWeChatReturnCode.ACCESS_TOKEN_EXPIRED or
+                ret == EWeChatReturnCode.ACCESS_TOKEN_INVALID)):
+            return push(data, True)
         else:
-            if (api_code == APIReturnCode.AIP_CODE_ERROR and
-                    (ret == EWeChatReturnCode.ACCESS_TOKEN_EXPIRED or
-                        ret == EWeChatReturnCode.ACCESS_TOKEN_INVALID)):
-                return push(data, True)
-            else:
-                return ReturnCode.IM_API_ERROR, ret
+            return ReturnCode.OK, ret
     else:
         return code, ret
 

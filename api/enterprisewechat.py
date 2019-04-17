@@ -40,9 +40,9 @@ def __get_api_result(response):
         if wechat_ret[__ERRCODE] == EWeChatReturnCode.OK:
             return APIReturnCode.OK, response
         else:
-            return APIReturnCode.AIP_CODE_ERROR, wechat_ret[__ERRCODE]
+            return APIReturnCode.AIP_CODE_ERROR, response
     else:
-        return APIReturnCode.HTTP_ERROR, str(response.status_code)
+        return APIReturnCode.HTTP_ERROR, response
 
 
 class EWeChatReturnCode(metaclass=Singleton):
