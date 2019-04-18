@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*- 
 import json
 import boto3
 import logging
@@ -47,8 +48,10 @@ def lambda_handler(event, context):
         return __result(ReturnCode.IM_ERRROR, '')
 
     if im == __ENTERPRISE_WECHAT:
+        retry_policy = RetryPolicy(3)
         data = event['body']
-        code, ret = __push(json.dumps(data))
+        data = data.encode("utf-8")
+        code, ret = __push(data, retry_policy)
         return __result(code, ret)
 
 
@@ -71,11 +74,11 @@ def __result(code, ret):
 """======================service==============================="""
 
 
-def __push(data, force_from_api=False):
-    if RetryPolicy.exceeded_max_retry():
-        return ReturnCode.RETRY_MAX, ''
+def __push(data, retry_policy, force_from_api=False):
+    if retry_policy.exceeded_max_retry():
+        return ReturnCode.RETRY_MAX, 'retry max'
     else:
-        RetryPolicy.increment_retry_count()
+        retry_policy.increment_retry_count()
 
     code, ret = __get_access_token(force_from_api)
     if code == ReturnCode.OK:
@@ -83,7 +86,7 @@ def __push(data, force_from_api=False):
         if (api_code == APIReturnCode.AIP_CODE_ERROR and
             (ret == EWeChatReturnCode.ACCESS_TOKEN_EXPIRED or
                 ret == EWeChatReturnCode.ACCESS_TOKEN_INVALID)):
-            return __push(data, True)
+            return __push(data, retry_policy, True)
         else:
             return ReturnCode.OK, ret
     else:
@@ -139,8 +142,6 @@ class RetryPolicy:
 
     def exceeded_max_retry(self):
         return (self.max_retry_count <= self.retried_count)
-
-RetryPolicy = RetryPolicy(3)
 
 """======================call api==============================="""
 
@@ -217,8 +218,7 @@ class DbAccessToken:
 
     def __getTable(self):
         self.__dynamodb = boto3.resource(
-            'dynamodb', region_name=self.__region,
-            endpoint_url=self.__LOCAL_ENDPOINT_URL)
+            'dynamodb', region_name=self.__region)
         # endpoint_url=self.__LOCAL_ENDPOINT_URL
         table_list = self.__dynamodb.tables.all()
         for table in table_list:
