@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 import json
 import boto3
 import logging
@@ -34,12 +34,16 @@ __SUPPORT_IMS = [__ENTERPRISE_WECHAT]
 
 
 def lambda_handler(event, context):
-    header = event['headers']
-    if (not header or __SECRET_KEY_NAME not in header or
-            header[__SECRET_KEY_NAME] != __SECRET_KEY):
+    header = event.get('headers', None)
+    if not header:
+        return __result(ReturnCode.SECRETKEY_EREEOR, '')
+    secret_key_name_lower = __SECRET_KEY_NAME.lower()
+    secret_key = header.get(
+        __SECRET_KEY_NAME, None) or header.get(secret_key_name_lower, None)
+    if (secret_key != __SECRET_KEY):
         return __result(ReturnCode.SECRETKEY_EREEOR, '')
 
-    path_params = event['pathParameters']
+    path_params = event.get('pathParameters', None)
     if not path_params:
         return __result(ReturnCode.URL_ERRROR, '')
 
