@@ -54,7 +54,8 @@ def lambda_handler(event, context):
     if im == __ENTERPRISE_WECHAT:
         retry_policy = RetryPolicy(3)
         data = event['body']
-        data = data.encode("utf-8")
+        if data:
+            data = data.encode("utf-8")
         code, ret = __push(data, retry_policy)
         return __result(code, ret)
 
