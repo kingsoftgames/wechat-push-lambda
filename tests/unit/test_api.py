@@ -1,8 +1,8 @@
 import json
 import pytest
-from push import __api_get_access_token
-from push import __api_send
-from push import APIReturnCode
+from function.push import __api_get_access_token
+from function.push import __api_send
+from function.push import APIReturnCode
 
 
 def test_get_access_token():

@@ -1,8 +1,8 @@
 import json
 import pytest
 import time
-from push import DbAccessToken
-from push import DbReturnCode
+from function.push import DbAccessToken
+from function.push import DbReturnCode
 
 
 def test_add_access_token():

@@ -1,7 +1,7 @@
 import pytest
 import json
-from push import __push
-from push import ReturnCode
+from function.push import __push
+from function.push import ReturnCode
 
 
 def test_wechatim_push():

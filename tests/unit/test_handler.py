@@ -1,7 +1,7 @@
 import json
 import pytest
 
-from push import lambda_handler
+from function.push import lambda_handler
 
 
 @pytest.fixture()
