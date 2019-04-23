@@ -5,6 +5,7 @@ import logging
 import time
 from enum import Enum, unique
 from botocore.vendored import requests
+from botocore.exceptions import ClientError
 
 """======================for render==============================="""
 __SECRET_KEY = "${push_secretkey}"
@@ -225,13 +226,14 @@ class DbAccessToken:
         self.__dynamodb = boto3.resource(
             'dynamodb', region_name=self.__region)
         # endpoint_url=self.__LOCAL_ENDPOINT_URL
-        table_list = self.__dynamodb.tables.all()
-        for table in table_list:
-            if table.table_name == self.__table_name:
-                self.__exist_table = True
-                break
-        if self.__exist_table:
+        try:
+            response = self.__dynamodb.meta.client.describe_table(
+                TableName=self.__table_name)
             self.__table = self.__dynamodb.Table(self.__table_name)
+            self.__exist_table = True
+        except ClientError as e:
+            print(e)
+            self.__logger.exception("table no exist:")
 
     def add(self, im, access_token, ttl):
         if not self.__exist_table:
@@ -244,7 +246,7 @@ class DbAccessToken:
                     self.__ATTRIBUTE_TTL: ttl
                 })
         except ClientError:
-            __logger.exception("add item error:")
+            self.__logger.exception("add item error:")
             return DbReturnCode.DB_ERROR
         return DbReturnCode.OK
 
