@@ -41,7 +41,7 @@ data "archive_file" "push_lambda" {
     filename = "${var.lambda_python_file}"
   }
 
-  output_path = "${path.module}/function/push.zip"
+  output_path = "${substr("${path.module}/function/push.zip", length(path.cwd) + 1, -1)}"
 }
 
 data "aws_iam_policy_document" "push_lambda" {
