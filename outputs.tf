@@ -2,7 +2,7 @@
 # dynamodb
 ## ===========================================================================
 output "push-dynamodb-arn" {
-  value       = "${aws_dynamodb_table.push_dynamodb.arn}"
+  value = "${aws_dynamodb_table.push_dynamodb.arn}"
 }
 
 ## ===========================================================================
@@ -15,7 +15,6 @@ output "push-lambda-name" {
 output "push-lambda-arn" {
   value = "${aws_lambda_function.push_lambda.arn}"
 }
-
 
 ## ===========================================================================
 # api gateway
