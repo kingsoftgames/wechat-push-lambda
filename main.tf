@@ -107,7 +107,7 @@ resource "aws_iam_role" "push_lambda" {
 }
 
 resource "aws_lambda_function" "push_lambda" {
-  filename         = "${data.archive_file.push_lambda.output_path}"
+  filename         = "${substr(data.archive_file.push_lambda.output_path, length(path.cwd) + 1, -1)}"
   function_name    = "${var.lambda_function_name}"
   role             = "${aws_iam_role.push_lambda.arn}"
   handler          = "push.lambda_handler"

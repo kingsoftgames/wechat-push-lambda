@@ -257,8 +257,8 @@ class DbAccessToken:
             response = self.__table.get_item(Key={
                 self.__hash_key: im
             })
-        except ClientError as e:
-            self.__logger.error("get item error: %s", e)
+        except ClientError:
+            self.__logger.exception("get item error:")
             return DbReturnCode.DB_ERROR, ""
         key = 'Item'
         if key in response:
