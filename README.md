@@ -13,6 +13,7 @@
 
 - 使用示例
 
+```
 module "wechat-push" {
   source                             = "./modules/wechat-push-lanmuda"
   lambda_function_name               = "wechat-push"
@@ -21,7 +22,7 @@ module "wechat-push" {
   lambda_im_ewc_corpsecret           = "企业微信的corpsecret"
   db_table_name                      = "example"
 }
-
+```
 ### API
 
 **透传企业微信API的参数，不需要关心access_token**
